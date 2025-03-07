@@ -27,7 +27,7 @@ const Onboarding2 = () => {
     }),
     onSubmit: (values) => {
       console.log("Form values:", values);
-      router.push("/onboarding3"); // Navigate to onboarding3 after successful submission
+      router.push("/onboarding3");
     },
   });
 
@@ -89,7 +89,6 @@ const Onboarding2 = () => {
           </form>
         </div>
 
-        {/* Right Side Profile and Client Section */}
         <div className="bg-white shadow-lg rounded-lg p-6 w-[48%]">
           <div className="mt-2 flex items-center justify-center">
             <ProfileCard />
