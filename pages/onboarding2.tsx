@@ -1,134 +1,95 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useRouter } from "next/router";
 import Image from "next/image";
-import { useRouter } from "next/router"; 
 import StepIndicator from "../components/StepIndicator";
 import ProfileCard from "../components/ProfileCard";
 import Client from "../components/Client";
 import "../src/app/globals.css";
 import logo from "../public/logo.png";
 
-const Onboarding1 = () => {
+const Onboarding2 = () => {
   const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      location: "",
-      title: "",
-      company: "",
+      email: "",
+      phone: "",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("First name is required"),
-      lastName: Yup.string().required("Last name is required"),
+      email: Yup.string()
+        .email("Invalid email format")
+        .required("Email is required"),
+      phone: Yup.string()
+        .matches(/^\+?[0-9]{10,15}$/, "Invalid phone number format")
+        .required("Phone number is required"),
     }),
     onSubmit: (values) => {
       console.log("Form values:", values);
-      router.push("/onboarding2"); 
+      router.push("/onboarding3"); // Navigate to onboarding3 after successful submission
     },
   });
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="flex gap-8 w-full max-w-5xl">
+        {/* Left Side Form */}
         <div className="bg-white shadow-lg rounded-lg p-10 w-[60%]">
           <div className="flex justify-start mb-6">
             <Image src={logo} alt="Logo" width={150} height={80} />
           </div>
 
-          <StepIndicator previousStep={0} currentStep={1} />
+          <StepIndicator previousStep={1} currentStep={2} />
 
-          <h2 className="text-2xl font-bold mb-2">Bio hero details</h2>
-          <p className="text-gray-600 mb-6">
-            We’ll use this info to build your page.
-          </p>
+          <h2 className="text-2xl font-bold mb-2">
+            How can your audience connect with you?
+          </h2>
+          <p className="text-gray-600 mb-6">You can customize the details later.</p>
 
           <form onSubmit={formik.handleSubmit} className="space-y-4">
-            <div className="flex gap-4">
-              <div className="w-1/2">
-                <label className="block font-medium mb-2">First name*</label>
-                <input
-                  type="text"
-                  name="firstName"
-                  className="w-full px-3 py-2 border rounded-lg"
-                  placeholder="First name"
-                  value={formik.values.firstName}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.firstName && formik.errors.firstName && (
-                  <p className="text-red-500 text-sm">
-                    {formik.errors.firstName}
-                  </p>
-                )}
-              </div>
-
-              <div className="w-1/2">
-                <label className="block font-medium mb-2">Last name*</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  className="w-full px-3 py-2 border rounded-lg"
-                  placeholder="Last name"
-                  value={formik.values.lastName}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.lastName && formik.errors.lastName && (
-                  <p className="text-red-500 text-sm">
-                    {formik.errors.lastName}
-                  </p>
-                )}
-              </div>
+            <div>
+              <label className="block font-medium mb-2">Email</label>
+              <input
+                type="text"
+                name="email"
+                className="w-full px-3 py-2 border rounded-lg"
+                placeholder="name@domain.com"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.email && formik.errors.email && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.email}</p>
+              )}
             </div>
 
             <div>
-              <label className="block font-medium mb-2">Location</label>
+              <label className="block font-medium mb-2">Phone number</label>
               <input
                 type="text"
-                name="location"
+                name="phone"
                 className="w-full px-3 py-2 border rounded-lg"
-                placeholder="Place, City, Country"
-                value={formik.values.location}
+                placeholder="(+XX)9999999999"
+                value={formik.values.phone}
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
-            </div>
-
-            <div>
-              <label className="block font-medium mb-2">Title</label>
-              <input
-                type="text"
-                name="title"
-                className="w-full px-3 py-2 border rounded-lg"
-                placeholder="Marketing Lead"
-                value={formik.values.title}
-                onChange={formik.handleChange}
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium mb-2">Company</label>
-              <input
-                type="text"
-                name="company"
-                className="w-full px-3 py-2 border rounded-lg"
-                placeholder="Acme"
-                value={formik.values.company}
-                onChange={formik.handleChange}
-              />
+              {formik.touched.phone && formik.errors.phone && (
+                <p className="text-red-500 text-sm mt-1">{formik.errors.phone}</p>
+              )}
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded-xl hover:bg-blue-600 transition"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
             >
               Continue
             </button>
           </form>
         </div>
 
+        {/* Right Side Profile and Client Section */}
         <div className="bg-white shadow-lg rounded-lg p-6 w-[48%]">
           <div className="mt-2 flex items-center justify-center">
             <ProfileCard />
@@ -152,9 +113,7 @@ const Onboarding1 = () => {
             </div>
             <div className="p-2 bg-gray-100 rounded-lg">
               <h4 className="text-sm font-semibold">Tech Stack</h4>
-              <p className="text-xs text-gray-500">
-                Tech display for my customers
-              </p>
+              <p className="text-xs text-gray-500">Tech display for my customers</p>
             </div>
           </div>
           <div className="mt-2 grid grid-cols-2 gap-3">
@@ -173,4 +132,4 @@ const Onboarding1 = () => {
   );
 };
 
-export default Onboarding1;
+export default Onboarding2;
